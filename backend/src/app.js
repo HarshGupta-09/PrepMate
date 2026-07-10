@@ -16,10 +16,9 @@ app.get("/", (req, res) => {
     name : "Harsh",
     role : "Student"
    };
-    console.log(new apiResponse(200,user,"tested successfullyy"))
+    
 
-  const error = new apiError(404,"user not found")
-  console.log(error.message)
+  
 
 
 });
