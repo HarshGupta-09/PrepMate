@@ -4,7 +4,7 @@ import ApiError from "../utils/ApiError.js";
 const validate = (schema) => {
     return (req, res, next) => {
         try {
-            schema.parse(req.body);
+         req.body = schema.parse(req.body);
             next();
         } catch (error) {
             if (error instanceof ZodError) {
