@@ -3,7 +3,7 @@ import express from "express";
 import ApiResponse from "./utils/ApiResponse.js";
 import notFoundMiddleware from "./middlewares/notFound.middleware.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
-
+import { authRouter } from "./routes/index.js"
 const app = express();
 
 // Built-in Middlewares
@@ -25,6 +25,11 @@ app.get("/", (req, res) => {
         )
     );
 });
+// Mount routes
+app.use("/api/v1/auth",authRouter);
+
+
+
 
 // Handles Undefined Routes
 app.use(notFoundMiddleware);
