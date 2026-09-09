@@ -7,19 +7,26 @@ import { AUTH_MESSAGES } from "../constants/messages.js";
 
 const registerUser = async (userData) => {
     const { name, email, password } = userData;
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
         throw new ApiError(409, AUTH_MESSAGES.USER_ALREADY_EXISTS);
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await User.create({
         name,
         email,
         password: hashedPassword,
     });
 
-    return user;
+    return {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+    };
 };
 
 const loginUser = async (userData) => {
@@ -40,7 +47,6 @@ const loginUser = async (userData) => {
         throw new ApiError(401, AUTH_MESSAGES.INVALID_CREDENTIALS);
     }
 
-   
     const token = jwt.sign(
         {
             id: user._id,
@@ -52,7 +58,11 @@ const loginUser = async (userData) => {
     );
 
     return {
-        user,
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+        },
         token,
     };
 };
