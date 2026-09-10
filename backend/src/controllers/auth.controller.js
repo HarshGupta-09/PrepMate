@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
-import { registerUser, loginUser } from "../services/auth.service.js";
+import { registerUser, loginUser ,getMe} from "../services/auth.service.js";
 import { AUTH_MESSAGES } from "../constants/index.js";
 
 const register = asyncHandler(async (req, res) => {
@@ -28,7 +28,19 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
+const me = asyncHandler(async (req, res) => {
+    const userData = await getMe(req.user.id);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            userData,
+           "user fetched successfully"
+        )
+    );
+});
 export {
     register,
     login,
+    me
 };

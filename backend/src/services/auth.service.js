@@ -67,7 +67,20 @@ const loginUser = async (userData) => {
     };
 };
 
+const getMe = async (userId) => {
+    const user = await User
+        .findById(userId)
+        .select("-password");
+
+    if (!user) {
+        throw new ApiError(404, AUTH_MESSAGES.USER_NOT_FOUND);
+    }
+
+    return user;
+};
+
 export {
     registerUser,
     loginUser,
+    getMe
 };
