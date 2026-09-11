@@ -1,6 +1,6 @@
 import express from "express";
 
-import { register, login, me } from "../controllers/auth.controller.js";
+import { register, login, me,changePass } from "../controllers/auth.controller.js";
 import { registerSchema, loginSchema } from "../validators/auth.validator.js";
 import validate from "../middlewares/validate.middleware.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
@@ -22,6 +22,11 @@ authRouter.get(
     "/me",
     authMiddleware,
     me
+)
+authRouter.patch(
+    "/change-pass",
+    authMiddleware,
+    changePass
 )
 
 export default authRouter;

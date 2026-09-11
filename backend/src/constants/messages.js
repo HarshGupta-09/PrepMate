@@ -27,4 +27,5 @@ export const AUTH_MESSAGES = {
     REFRESH_TOKEN_EXPIRED: "Refresh Token Expired",
 
     PASSWORD_CHANGED_SUCCESSFULLY: "Password Changed Successfully",
+    INCORRECT_PASSWORD : "Incorrect Password"
 };

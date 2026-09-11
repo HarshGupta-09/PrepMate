@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
-import { registerUser, loginUser ,getMe} from "../services/auth.service.js";
+import { registerUser, loginUser ,getMe,changePassword} from "../services/auth.service.js";
 import { AUTH_MESSAGES } from "../constants/index.js";
 
 const register = asyncHandler(async (req, res) => {
@@ -39,8 +39,32 @@ const me = asyncHandler(async (req, res) => {
         )
     );
 });
+
+const changePass = asyncHandler(async (req, res) => {
+
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    await changePassword(
+        userId,
+        currentPassword,
+        newPassword
+    );
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            null,
+            AUTH_MESSAGES.PASSWORD_CHANGED_SUCCESSFULLY
+        )
+    );
+});
+
+
+
 export {
     register,
     login,
-    me
+    me,
+    changePass
 };

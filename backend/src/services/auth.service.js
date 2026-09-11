@@ -79,8 +79,48 @@ const getMe = async (userId) => {
     return user;
 };
 
+const changePassword = async (
+    userId,
+    currentPassword,
+    newPassword
+) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new ApiError(
+            404,
+            AUTH_MESSAGES.USER_NOT_FOUND
+        );
+    }
+
+    const isMatch = await bcrypt.compare(
+        currentPassword,
+        user.password
+    );
+
+    if (!isMatch) {
+        throw new ApiError(
+            401,
+            AUTH_MESSAGES.INCORRECT_PASSWORD
+        );
+    }
+
+    const hashedNewPassword = await bcrypt.hash(
+        newPassword,
+        10
+    );
+
+    await User.findByIdAndUpdate(
+        userId,
+        {
+            password: hashedNewPassword
+        }
+    );
+};
+
 export {
     registerUser,
     loginUser,
-    getMe
+    getMe,
+    changePassword
 };
