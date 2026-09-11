@@ -15,4 +15,5 @@ const getAllSessionService = async (userId) => {
 
 export {
   createSessionService,
+  getAllSessionService
 };

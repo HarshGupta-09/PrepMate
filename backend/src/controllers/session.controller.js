@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { GENERAL_MESSAGES } from "../constants/index.js";
-import { createSessionService } from "../services/session.service.js";
+import { createSessionService,getAllSessionService } from "../services/session.service.js";
 
 const createSession = asyncHandler(async (req, res) => {
   const session = await createSessionService(req.body, req.user.id);
