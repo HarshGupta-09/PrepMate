@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { GENERAL_MESSAGES } from "../constants/index.js";
-import { createSessionService,getAllSessionService ,getSessionService} from "../services/session.service.js";
+import { createSessionService,getAllSessionService ,getSessionService,updateSessionService} from "../services/session.service.js";
 
 const createSession = asyncHandler(async (req, res) => {
   const session = await createSessionService(req.body, req.user.id);
@@ -38,9 +38,26 @@ const getSession = asyncHandler(async (req, res) => {
   );
 });
 
+const updateSession = asyncHandler(async (req, res) => {
+  const updatedSession = await updateSessionService(
+    req.user.id,
+    req.params.id,
+    req.body
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      updatedSession,
+      GENERAL_MESSAGES.SUCCESS
+    )
+  );
+});
+
 
 export {
   createSession,
   getAllSession,
   getSession,
+  updateSession
 };

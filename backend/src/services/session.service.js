@@ -26,8 +26,31 @@ const getSessionService = async (userId, sessionId) => {
   return session;
 };
 
+const updateSessionService = async (userId, sessionId, sessionData) => {
+  const updatedSession = await Session.findOneAndUpdate(
+    {
+      _id: sessionId,
+      userId: userId,
+    },
+    {
+      $set: sessionData,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!updatedSession) {
+    throw new ApiError(404, "Session not found");
+  }
+
+  return updatedSession;
+};
+
 export {
   createSessionService,
   getAllSessionService,
-  getSessionService
+  getSessionService,
+  updateSessionService
 };

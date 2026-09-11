@@ -15,3 +15,4 @@ export const sessionSchema = z.object({
         "hard"
     ]),
 });
+export const updateSessionSchema = sessionSchema.partial();
