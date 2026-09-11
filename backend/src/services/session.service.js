@@ -9,6 +9,10 @@ const createSessionService = async (sessionData, userId) => {
   return session;
 };
 
+const getAllSessionService = async (userId) => {
+  return await Session.find({ userId });
+};
+
 export {
   createSessionService,
 };

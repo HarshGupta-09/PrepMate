@@ -11,7 +11,12 @@ sessionRouter.post(
         validate(sessionSchema),
         createSession,
 )
-
+sessionRouter.get(
+    "/",
+    authMiddleware,
+        validate(sessionSchema),
+        getAllSession,
+)
 
 
 

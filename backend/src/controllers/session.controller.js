@@ -15,6 +15,20 @@ const createSession = asyncHandler(async (req, res) => {
   );
 });
 
+const getAllSession = asyncHandler(async (req, res) => {
+  const sessions = await getAllSessionService(req.user.id);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      sessions,
+      GENERAL_MESSAGES.SUCCESS
+    )
+  );
+});
+
+
 export {
-  createSession
+  createSession,
+  getAllSession
 };
