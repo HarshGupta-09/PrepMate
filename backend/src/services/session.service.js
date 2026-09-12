@@ -47,10 +47,21 @@ const updateSessionService = async (userId, sessionId, sessionData) => {
 
   return updatedSession;
 };
+const deleteSessionService = async (userId, sessionId) => {
+  const deletedSession = await Session.findOneAndDelete({
+    _id: sessionId,
+    userId,
+  });
+
+  if (!deletedSession) {
+    throw new ApiError(404, "Session not found");
+  }
+};
 
 export {
   createSessionService,
   getAllSessionService,
   getSessionService,
-  updateSessionService
+  updateSessionService,
+  deleteSessionService
 };

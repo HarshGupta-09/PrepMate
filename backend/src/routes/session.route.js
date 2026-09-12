@@ -3,7 +3,7 @@ import validate from "../middlewares/validate.middleware.js";
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { sessionSchema, updateSessionSchema } from "../validators/session.validator.js";
 const sessionRouter = express.Router();
-import { createSession,getAllSession , getSession,updateSession } from "../controllers/session.controller.js";
+import { createSession,getAllSession , getSession,updateSession,deleteSession } from "../controllers/session.controller.js";
 
 sessionRouter.post(
     "/",
@@ -28,6 +28,13 @@ sessionRouter.patch(
     authMiddleware,
         validate(updateSessionSchema),
         updateSession,
+)
+sessionRouter.delete(
+    "/:id",
+    authMiddleware,
+    deleteSession,
+       
+    
 )
 
 
