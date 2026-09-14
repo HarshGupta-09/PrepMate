@@ -67,6 +67,18 @@ const deleteSession = asyncHandler(async (req, res) => {
   );
 });
 
+const generateQuestions = asyncHandler(async(req,res)=>{
+
+  const questions = await generateQuestionsService(req.user.id , req.params.id)
+    return res.status(200).json(
+    new ApiResponse(
+      200,
+      questions,
+      GENERAL_MESSAGES.SUCCESS
+    )
+  );
+})
+
 
 export {
   createSession,
@@ -74,4 +86,5 @@ export {
   getSession,
   updateSession,
   deleteSession,
+  generateQuestions
 };

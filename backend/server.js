@@ -6,19 +6,6 @@ import connectDB from "./src/config/db.js";
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 const startServer = async () => {
   try {
     await connectDB();
