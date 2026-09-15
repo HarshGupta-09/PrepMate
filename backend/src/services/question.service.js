@@ -1,15 +1,9 @@
-import Question from "../models/question.model.js"
-import ApiError from "../utils/ApiError.js";
-import Session from "../models/session.model.js";
-import { generatedQuestionsSchema } from "../validators/question.validator.js";
-import ai from "../config/gemini.js"
-
 import Question from "../models/question.model.js";
 import ApiError from "../utils/ApiError.js";
 import Session from "../models/session.model.js";
 import { generatedQuestionsSchema } from "../validators/question.validator.js";
 import ai from "../config/gemini.js";
-import { zodToJsonSchema } from "zod-to-json-schema";
+
 
 const generateQuestionsService = async (userId, sessionId) => {
   // 1. Find session
@@ -50,56 +44,73 @@ Requirements:
 
   // 5. Generate questions using Gemini
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(generatedQuestionsSchema),
+  model: "gemini-3.6-flash",
+  contents: prompt,
+  config: {
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          question: {
+            type: "string",
+          },
+          answer: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+          category: {
+            type: "string",
+          },
+          difficulty: {
+            type: "string",
+            enum: ["easy", "medium", "hard"],
+          },
+        },
+        required: [
+          "question",
+          "answer",
+          "type",
+          "category",
+          "difficulty",
+        ],
+      },
     },
-  });
+  },
+});
 
   // 6. Convert Gemini JSON string into JavaScript data
+  // console.log("GEMINI RESPONSE:", response.text);
   let generatedQuestions;
 
   try {
     generatedQuestions = JSON.parse(response.text);
   } catch (error) {
-    throw new ApiError(
-      500,
-      "Invalid response received from Gemini"
-    );
+    throw new ApiError(500, "Invalid response received from Gemini");
   }
 
   // 7. Validate Gemini response using Zod
-  const validatedQuestions =
-    generatedQuestionsSchema.parse(generatedQuestions);
+  const validatedQuestions = generatedQuestionsSchema.parse(generatedQuestions);
 
   // 8. Prepare questions for MongoDB
-  const questionsToSave = validatedQuestions.map(
-    (question, index) => ({
-      sessionId,
-      question: question.question,
-      answer: question.answer,
-      type: question.type,
-      category: question.category,
-      difficulty: question.difficulty,
-      order: startingOrder + index,
-    })
-  );
+  const questionsToSave = validatedQuestions.map((question, index) => ({
+    sessionId,
+    question: question.question,
+    answer: question.answer,
+    type: question.type,
+    category: question.category,
+    difficulty: question.difficulty,
+    order: startingOrder + index,
+  }));
 
   // 9. Save all 10 questions
-  const savedQuestions = await Question.insertMany(
-    questionsToSave
-  );
+  const savedQuestions = await Question.insertMany(questionsToSave);
 
   // 10. Return saved questions
   return savedQuestions;
 };
 
-export {
-  generateQuestionsService,
-};
-export{
-    generateQuestionsService
-}
+export { generateQuestionsService };
