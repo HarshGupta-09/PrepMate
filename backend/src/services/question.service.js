@@ -113,4 +113,24 @@ Requirements:
   return savedQuestions;
 };
 
-export { generateQuestionsService };
+const getAllQuestionsService = async (userId, sessionId) => {
+
+  const session = await Session.findOne({
+    _id: sessionId,
+    userId,
+  });
+
+  if (!session) {
+    throw new ApiError(404, "Session not found");
+  }
+
+  const questions = await Question.find({
+    sessionId,
+  }).sort({ order: 1 });
+
+  return questions;
+};
+
+export { generateQuestionsService ,
+  getAllQuestionsService
+};
