@@ -39,6 +39,6 @@ const aiInterviewSchema = new mongoose.Schema(
   }
 );
 
-const AIInterview = mongoose.model("AIInterview", aiInterviewSchema);
+const Interview = mongoose.model("AIInterview", aiInterviewSchema);
 
-export default AIInterview;
+export default Interview;
