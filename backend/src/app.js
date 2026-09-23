@@ -3,7 +3,7 @@ import express from "express";
 import ApiResponse from "./utils/ApiResponse.js";
 import notFoundMiddleware from "./middlewares/notFound.middleware.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
-import { authRouter,sessionRouter } from "./routes/index.js"
+import { authRouter,sessionRouter, interviewRouter } from "./routes/index.js"
 const app = express();
 
 // Built-in Middlewares
@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
 // Mount routes
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/session",sessionRouter);
+app.use("/api/v1/interview",interviewRouter)
 
 
 

@@ -5,7 +5,7 @@ export const createInterviewSchema = z
     type: z.enum(["hr", "technical"]),
 
     sessionId: z.string().optional(),
-  })
+  }) // Agar type hr hai, toh sessionId ki zarurat nahi Lekin agar type technical hai.. toh sessionId mandatory hai
   .refine(
     (data) => data.type === "hr" || !!data.sessionId,
     {
