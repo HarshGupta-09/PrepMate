@@ -22,6 +22,14 @@ const createInterviewService = async (interviewData, userId) => {
     return interview;
 };
 
+const getAllInterviewsService = async(userId)=>{
+    return await Interview.find({userId})
+}
+
+
+
+
 export {
-    createInterviewService
+    createInterviewService,
+    getAllInterviewsService
 }
