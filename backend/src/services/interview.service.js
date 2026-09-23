@@ -36,12 +36,37 @@ const getInterviewService = async(userId,interviewId)=>{
     }
     return interview;
 }
+const endInterviewService = async (userId, interviewId) => {
 
+    const interview = await Interview.findOneAndUpdate(
+        {
+            _id: interviewId,
+            userId,
+            status: "active",
+        },
+        {
+            $set: {
+                status: "completed",
+                endedAt: new Date(),
+            },
+        },
+        {
+            new: true,
+            runValidators: true,
+        }
+    );
 
+    if (!interview) {
+        throw new ApiError(404, "Interview already ended");
+    }
+
+    return interview;
+};
 
 
 export {
     createInterviewService,
     getAllInterviewsService,
-    getInterviewService
+    getInterviewService,
+    endInterviewService,
 }
