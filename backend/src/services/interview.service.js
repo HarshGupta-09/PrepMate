@@ -25,11 +25,23 @@ const createInterviewService = async (interviewData, userId) => {
 const getAllInterviewsService = async(userId)=>{
     return await Interview.find({userId})
 }
+const getInterviewService = async(userId,interviewId)=>{
+    const interview = await Interview.findOne({
+        _id : interviewId,
+        userId
+    });
+    if(!interview){
+        throw new ApiError(404,"Interview not found")
+
+    }
+    return interview;
+}
 
 
 
 
 export {
     createInterviewService,
-    getAllInterviewsService
+    getAllInterviewsService,
+    getInterviewService
 }
