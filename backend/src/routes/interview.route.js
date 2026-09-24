@@ -2,7 +2,7 @@ import express from "express"
 import validate from "../middlewares/validate.middleware.js";
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { createInterviewSchema } from "../validators/interview.validator.js"
-import { createInterview, getInterviews,getInterview,endInterview} from "../controllers/interview.controller.js"
+import { createInterview, getInterviews,getInterview,endInterview , generateNextQuestion } from "../controllers/interview.controller.js"
 
 const interviewRouter = express.Router();
 
@@ -34,6 +34,11 @@ interviewRouter.post("/:id/end",
 
 
 )
+interviewRouter.post( 
+  "/:id/next-question",
+  authMiddleware,
+  generateNextQuestion
+);
 
 
 

@@ -2,7 +2,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { GENERAL_MESSAGES } from "../constants/index.js";
 
-import { createInterviewService, getAllInterviewsService ,getInterviewService,endInterviewService} from "../services/interview.service.js";
+import { createInterviewService, getAllInterviewsService ,getInterviewService,endInterviewService,generateNextQuestionService} from "../services/interview.service.js";
 
 const createInterview = asyncHandler(async (req, res) => {
     const interview = await createInterviewService(
@@ -69,10 +69,28 @@ const endInterview = asyncHandler(async (req, res) => {
         );
 });
 
+const generateNextQuestion = asyncHandler(async (req, res) => {
+  const result = await generateNextQuestionService(
+    req.user.id,
+    req.params.id
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      result, // question jo groq ne generate kiya hai vo jayega
+      GENERAL_MESSAGES.SUCCESS
+    )
+  );
+});
+
+
+
 
 export {
     createInterview,
     getInterviews,
     getInterview,
-    endInterview
+    endInterview,
+    generateNextQuestion
 };
