@@ -212,11 +212,46 @@ const messages = [
     question,
   };
 };
+const submitAnswerService = async (userId, interviewId, answer) => {
+
+  const interview = await Interview.findOne({
+    _id: interviewId,
+    userId,
+  });
+
+  if (!interview) {
+    throw new ApiError(404, "Interview not found");
+  }
+
+  if (interview.status === "completed") {
+    throw new ApiError(400, "Interview is already completed");
+  }
+
+  const turns = await InterviewTurn.find({
+    interviewId,
+  }).sort({ sequence: 1 });
+
+  const nextSequence =
+    turns.length > 0
+      ? turns[turns.length - 1].sequence + 1
+      : 1;
+
+  const turn = await InterviewTurn.create({
+    interviewId,
+    role: "user",
+    text: answer,
+    sequence: nextSequence,
+  });
+
+  return turn;
+};
+
 
 export {
   createInterviewService,
   getAllInterviewsService,
   getInterviewService,
   endInterviewService,
-  generateNextQuestionService
+  generateNextQuestionService,
+  submitAnswerService
 };

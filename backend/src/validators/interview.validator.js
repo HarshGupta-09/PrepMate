@@ -13,3 +13,11 @@ export const createInterviewSchema = z
       path: ["sessionId"],
     }
   );
+
+
+export const submitAnswerSchema = z.object({
+  answer: z
+    .string()
+    .trim()
+    .min(1, "Answer is required"),
+});

@@ -2,7 +2,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { GENERAL_MESSAGES } from "../constants/index.js";
 
-import { createInterviewService, getAllInterviewsService ,getInterviewService,endInterviewService,generateNextQuestionService} from "../services/interview.service.js";
+import { createInterviewService, getAllInterviewsService ,getInterviewService,endInterviewService,generateNextQuestionService , submitAnswerService} from "../services/interview.service.js";
 
 const createInterview = asyncHandler(async (req, res) => {
     const interview = await createInterviewService(
@@ -84,6 +84,23 @@ const generateNextQuestion = asyncHandler(async (req, res) => {
   );
 });
 
+const submitAnswer = asyncHandler(async (req, res) => {
+
+  const answer = await submitAnswerService(
+    req.user.id,
+    req.params.id,
+    req.body.answer
+  );
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      answer,
+      GENERAL_MESSAGES.SUCCESS
+    )
+  );
+
+});
 
 
 
@@ -92,5 +109,6 @@ export {
     getInterviews,
     getInterview,
     endInterview,
-    generateNextQuestion
+    generateNextQuestion,
+    submitAnswer
 };
