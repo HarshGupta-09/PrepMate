@@ -214,36 +214,73 @@ const messages = [
 };
 const submitAnswerService = async (userId, interviewId, answer) => {
 
-  const interview = await Interview.findOne({
-    _id: interviewId,
-    userId,
-  });
+    const MAX_QUESTIONS = 10;
 
-  if (!interview) {
-    throw new ApiError(404, "Interview not found");
-  }
+   
+    const interview = await Interview.findOne({
+        _id: interviewId,
+        userId,
+    });
 
-  if (interview.status === "completed") {
-    throw new ApiError(400, "Interview is already completed");
-  }
+    if (!interview) {
+        throw new ApiError(404, "Interview not found");
+    }
 
-  const turns = await InterviewTurn.find({
-    interviewId,
-  }).sort({ sequence: 1 });
+  
+    if (interview.status === "completed") {
+        throw new ApiError(400, "Interview is already completed");
+    }
 
-  const nextSequence =
-    turns.length > 0
-      ? turns[turns.length - 1].sequence + 1
-      : 1;
+   
+    const turns = await InterviewTurn.find({
+        interviewId,
+    }).sort({
+        sequence: 1,
+    });
 
-  const turn = await InterviewTurn.create({
-    interviewId,
-    role: "user",
-    text: answer,
-    sequence: nextSequence,
-  });
+   
+    const aiQuestionCount = turns.filter(
+        (turn) => turn.role === "ai"
+    ).length;
 
-  return turn;
+    const userSequence = turns.length + 1;
+
+   
+    const userTurn = await InterviewTurn.create({
+        interviewId,
+        role: "user",
+        text: answer,
+        sequence: userSequence,
+    });
+
+    //  If 10 questions have been asked,
+    // this is the final answer
+    if (aiQuestionCount >= MAX_QUESTIONS) {
+
+        interview.status = "completed";
+        interview.endedAt = new Date();
+
+        await interview.save();
+
+        return {
+            completed: true,
+            userTurn,
+            nextQuestion: null,
+        };
+    }
+
+    // Generate next AI question
+    const nextQuestion = await generateNextQuestionService(
+        userId,
+        interviewId
+    );
+
+    
+    return {
+        completed: false,
+        userTurn,
+        nextQuestion,
+    };
 };
 
 

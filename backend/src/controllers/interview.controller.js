@@ -86,17 +86,21 @@ const generateNextQuestion = asyncHandler(async (req, res) => {
 
 const submitAnswer = asyncHandler(async (req, res) => {
 
-  const answer = await submitAnswerService(
+  const result = await submitAnswerService(
     req.user.id,
     req.params.id,
     req.body.answer
   );
 
+const message = result.completed
+    ? "Interview completed successfully"
+    : GENERAL_MESSAGES.SUCCESS;
+
   return res.status(200).json(
     new ApiResponse(
       200,
-      answer,
-      GENERAL_MESSAGES.SUCCESS
+      result,
+      message
     )
   );
 
