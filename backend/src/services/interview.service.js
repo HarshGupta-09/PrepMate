@@ -283,6 +283,27 @@ const submitAnswerService = async (userId, interviewId, answer) => {
     };
 };
 
+const getInterviewTurnsService = async (userId, interviewId) => {
+
+    const interview = await Interview.findOne({
+        _id: interviewId,
+        userId,
+    });
+
+    if (!interview) {
+        throw new ApiError(404, "Interview not found");
+    }
+
+    const turns = await InterviewTurn.find({
+        interviewId,
+    }).sort({
+        sequence: 1,
+    });
+
+    return turns;
+};
+
+
 
 export {
   createInterviewService,
@@ -290,5 +311,6 @@ export {
   getInterviewService,
   endInterviewService,
   generateNextQuestionService,
-  submitAnswerService
+  submitAnswerService,
+  getInterviewTurnsService
 };
